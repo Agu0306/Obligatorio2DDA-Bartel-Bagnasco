@@ -13,7 +13,6 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.ctc.obligatorio2dda.entity.Cliente;
-import com.ctc.obligatorio2dda.repository.ClienteRepository;
 import com.ctc.obligatorio2dda.service.ClienteServiceImpl;
 
 @CrossOrigin
@@ -23,7 +22,6 @@ import com.ctc.obligatorio2dda.service.ClienteServiceImpl;
 public class ClienteController{
     @Autowired
     private ClienteServiceImpl clienteServiceImpl;
-    private ClienteRepository clienteRepository;
 
     @PostMapping(value = "/agregarcliente")
     public ResponseEntity<?> create(@RequestBody Cliente cliente) {
@@ -62,19 +60,10 @@ public class ClienteController{
         }
     }
 
-    @GetMapping("/cliente/{id}")
+    @GetMapping("/clientes/{id}")
     public ResponseEntity<?> read(@PathVariable(value = "id") Long clienteId) {
         Optional<Cliente> unCliente = clienteServiceImpl.findById(clienteId);
         if (!unCliente.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(unCliente);
-    }
-
-    @GetMapping("/clientes?ci={ci}")
-    public ResponseEntity<?> findByCI(@PathVariable(value = "ci") String CI){
-        Optional<Cliente> unCliente = clienteRepository.findByCI(CI);
-        if(!unCliente.isPresent()){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(unCliente);

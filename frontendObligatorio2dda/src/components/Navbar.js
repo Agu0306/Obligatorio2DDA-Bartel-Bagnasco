@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import {Link, Routes, Route} from "react-router-dom";
 import AgregarCliente from "./AgregarCliente";
+import ListaClientes from "./ListaClientes";
+import Cliente from "./Cliente";
 
 class App extends Component {
   render() {
@@ -27,11 +29,11 @@ class App extends Component {
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={"#"} />
-            <Route path="/listaclientes" element={"#"} />
+            <Route path="/clientes" element={<ListaClientes/>} />
             <Route path="/agregarcliente" element={<AgregarCliente/>} />
             <Route path="/borrarcliente/:id" element={"#"} />
             <Route path="/modificarcliente/:id" element={"#"} />
-            <Route path="/cliente/:id" element={"#"} />
+            <Route path="/clientes/:id" element={<Cliente />} />
           </Routes>
         </div>
       </div>

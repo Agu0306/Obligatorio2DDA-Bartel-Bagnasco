@@ -5,25 +5,21 @@ class ClienteDataService {
     return http.get("/clientes");
   }
 
-  get(id) {
-    return http.get(`/cliente/${id}`);
+  get(ci) {
+    return http.get(`/clientes/${ci}`);
   }
 
   create(data) {
     return http.post("/agregarcliente", data);
   }
 
-  update(id, data) {
-    return http.put(`/modificarcliente/${id}`, data);
+  update(ci, data) {
+    return http.put(`/modificarcliente/${ci}`, data);
   }
 
-  delete(id) {
-    return http.delete(`/borrarcliente/${id}`);
-  }
-
-  findByCI(ci) {
-    return http.get(`/clientes?ci=${ci}`);
+  delete(ci) {
+    return http.delete(`/borrarcliente/${ci}`);
   }
 }
 
-export default new ClienteDataService;
+export default new ClienteDataService();

@@ -6,8 +6,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -17,12 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(length = 8, unique = true)
-    private String CI;
+    @Id
+    @Column(unique = true)
+    private Long CI;
 
     @Column(length = 30)
     private String nombre;
@@ -37,15 +33,11 @@ public class Cliente implements Serializable {
     @ManyToMany(mappedBy = "enrolledClientes")
     private Set<Plan> planes = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getCI() {
+    public Long getCI() {
         return CI;
     }
 
-    public void setCI(String pCI) {
+    public void setCI(Long pCI) {
         this.CI = pCI;
     }
 
@@ -77,7 +69,7 @@ public class Cliente implements Serializable {
         return planes;
     }
 
-    public Cliente(String pCI, String pNombre, String pApellido, String pEmail) {
+    public Cliente(Long pCI, String pNombre, String pApellido, String pEmail) {
         this.CI = pCI;
         this.nombre = pNombre;
         this.apellido = pApellido;

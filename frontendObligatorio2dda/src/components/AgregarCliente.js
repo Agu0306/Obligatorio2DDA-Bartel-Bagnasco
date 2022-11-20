@@ -12,8 +12,7 @@ export default class AgregarCliente extends Component {
         this.newCliente = this.newCliente.bind(this);
 
         this.state = {
-            id: null,
-            ci: "",
+            ci: null,
             apellido: "",
             email: "",
             nombre: "",
@@ -59,7 +58,6 @@ export default class AgregarCliente extends Component {
 
         ClienteDataService.create(data).then(response => {
             this.setState({
-                id: response.data.id,
                 ci: response.data.ci,
                 apellido: response.data.apellido,
                 email: response.data.email,
@@ -75,8 +73,7 @@ export default class AgregarCliente extends Component {
 
     newCliente() {
         this.setState({
-            id: null,
-            ci: "",
+            ci: null,
             apellido: "",
             email: "",
             nombre: "",
@@ -87,14 +84,6 @@ export default class AgregarCliente extends Component {
     render() {
         return (
             <div className="submit-form">
-                {this.state.submitted ? (
-                    <div>
-                        <h4>Agregado correctamente</h4>
-                        <button className="btn btn-success" onClick={this.newCliente}>
-                            Nuevo
-                        </button>
-                    </div>
-                ) : (
                     <div>
                         <div className="form-group">
                             <label htmlFor="ci">Cédula</label>
@@ -146,7 +135,6 @@ export default class AgregarCliente extends Component {
                             Agregar
                         </button>
                     </div>
-                )}
             </div>
         )
     }
