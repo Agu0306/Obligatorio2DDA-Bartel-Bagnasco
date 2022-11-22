@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ClienteDataService from "../services/cliente.service";
-import { Navigate, useNavigate } from 'react-router-dom';
+import ClienteDataService from "../../services/cliente.service";
+import { useNavigate } from 'react-router-dom';
 
 const AgregarCliente = () => {
     let navigate = useNavigate();
@@ -51,13 +51,19 @@ const AgregarCliente = () => {
                 <div className="form-group">
                     <label htmlFor="ci">Cédula</label>
                     <input
-                        type="number"
+                        onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                                event.preventDefault();
+                            }
+                        }}
+                        type="text"
                         className="form-control"
                         id="ci"
                         required
                         value={cliente.ci}
                         onChange={handleInputChange}
                         name="ci"
+                        maxLength={8}
                     />
 
                     <label htmlFor="nombre">Nombre</label>

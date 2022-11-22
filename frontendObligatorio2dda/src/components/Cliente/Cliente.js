@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ClienteDataService from "../services/cliente.service";
+import ClienteDataService from "../../services/cliente.service";
 import { useParams, useNavigate } from 'react-router-dom';
 
 const Cliente = props => {
@@ -7,11 +7,11 @@ const Cliente = props => {
     let navigate = useNavigate();
 
     const initialClienteState = {
-            ci: null,
-            nombre: "",
-            apellido: "",
-            email: "",
-            tipo: ""
+        ci: null,
+        nombre: "",
+        apellido: "",
+        email: "",
+        tipo: ""
     };
 
     const [currentCliente, setCurrentCliente] = useState(initialClienteState);
@@ -61,7 +61,7 @@ const Cliente = props => {
                         <div className="form-group">
                             <label htmlFor="ci"><strong>Cédula</strong></label>
                             <input
-                                type="numbers"
+                                type="text"
                                 className="form-control"
                                 id="ci"
                                 name="ci"

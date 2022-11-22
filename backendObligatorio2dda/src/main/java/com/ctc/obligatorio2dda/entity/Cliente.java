@@ -7,13 +7,14 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "clientes")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Cliente implements Serializable {
 
     @Id
@@ -28,6 +29,9 @@ public class Cliente implements Serializable {
 
     @Column(nullable = false, length = 30, unique = true)
     private String email;
+
+    @Column
+    private String tipo;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "enrolledClientes")
@@ -65,15 +69,24 @@ public class Cliente implements Serializable {
         this.email = pEmail;
     }
 
+    public String getTipo(){
+        return tipo;
+    }
+
+    public void setTipo(String pTipo){
+        this.tipo = pTipo;
+    }
+
     public Set<Plan> getPlanes(){
         return planes;
     }
 
-    public Cliente(Long pCI, String pNombre, String pApellido, String pEmail) {
+    public Cliente(Long pCI, String pNombre, String pApellido, String pEmail, String pTipo) {
         this.CI = pCI;
         this.nombre = pNombre;
         this.apellido = pApellido;
         this.email = pEmail;
+        this.tipo = pTipo;
     }
 
     public Cliente(){ }

@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import {Link, Routes, Route} from "react-router-dom";
-import AgregarCliente from "./AgregarCliente";
-import ListaClientes from "./ListaClientes";
-import Cliente from "./Cliente";
+import AgregarCliente from "./Cliente/AgregarCliente";
+import ListaClientes from "./Cliente/ListaClientes";
+import Cliente from "./Cliente/Cliente";
+import AgregarPlan from "./Plan/AgregarPlan";
+import ListaPlanes from "./Plan/ListaPlanes";
+import Plan from "./Plan/Plan";
 
 class App extends Component {
   render() {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/clientes" className="navbar-brand">
+          <a href="/clientes" className="navbar-brand" style={{marginLeft: "1%"}}>
             Obligatorio
           </a>
           <div className="navbar-nav mr-auto">
@@ -19,8 +22,8 @@ class App extends Component {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/agregarcliente"} className="nav-link">
-                Agregar
+              <Link to={"/planes"} className="nav-link">
+                Planes
               </Link>
             </li>
           </div>
@@ -30,10 +33,11 @@ class App extends Component {
           <Routes>
             <Route path="/" element={"#"} />
             <Route path="/clientes" element={<ListaClientes/>} />
+            <Route path="/planes" element={<ListaPlanes/>} />
             <Route path="/agregarcliente" element={<AgregarCliente/>} />
-            <Route path="/borrarcliente/:id" element={"#"} />
-            <Route path="/modificarcliente/:id" element={"#"} />
+            <Route path="/agregarplan" element={<AgregarPlan/>} />
             <Route path="/clientes/:id" element={<Cliente />} />
+            <Route path="/planes/:id" element={<Plan />} />
           </Routes>
         </div>
       </div>

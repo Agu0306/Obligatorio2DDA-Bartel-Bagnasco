@@ -1,39 +1,39 @@
 import React, { Component } from "react";
-import ClienteDataService from "../services/cliente.service";
+import PlanDataService from "../../services/plan.service";
 import { Link } from "react-router-dom";
 
-export default class ListaClientes extends Component {
+export default class ListaPlanes extends Component {
     constructor(props) {
         super(props);
-        this.onChangeBuscarCI = this.onChangeBuscarCI.bind(this);
-        this.retrieveCliente = this.retrieveClientes.bind(this);
+        this.onChangeBuscarPlan = this.onChangeBuscarPlan.bind(this);
+        this.retrievePlan = this.retrievePlanes.bind(this);
         this.refreshLista = this.refreshLista.bind(this);
-        this.buscarCI = this.buscarCI.bind(this);
+        this.buscarPlan = this.buscarPlan.bind(this);
 
         this.state = {
-            clientes: [],
-            currentCliente: null,
+            planes: [],
+            currentPlan: null,
             currentIndex: -1,
-            buscarCI: ""
+            buscarPlan: ""
         };
     }
 
     componentDidMount() {
-        this.retrieveClientes();
+        this.retrievePlanes();
     }
 
-    onChangeBuscarCI(e) {
+    onChangeBuscarPlan(e) {
         const busqueda = e.target.value;
 
         this.setState({
-            buscarCI: busqueda
+            buscarPlan: busqueda
         });
     }
 
-    retrieveClientes() {
-        ClienteDataService.getAll().then(response => {
+    retrievePlanes() {
+        PlanDataService.getAll().then(response => {
             this.setState({
-                clientes: response.data
+                planes: response.data
             });
             console.log(response.data);
         })
@@ -43,35 +43,42 @@ export default class ListaClientes extends Component {
     }
 
     refreshLista() {
-        this.retrieveCliente();
+        this.retrievePlan();
         this.setState({
-            currentCliente: null,
+            currentPlan: null,
             currentIndex: -1
         });
     }
 
-    setActiveCliente(cliente, index) {
+    setActivePlan(plan, index) {
         this.setState({
-            currentCliente: cliente,
+            currentPlan: plan,
             currentIndex: index
         });
     }
 
-    buscarCI() {
-        ClienteDataService.get(this.state.buscarCI).then(response => {
-            this.setState({
-                currentCliente: response.data,
-                currentIndex: response.data.index
-            });
-            console.log(response.data);
+    buscarPlan(e) {
+        if (e.target.value === "") {
+            PlanDataService.getAll().then(response => {
+                this.setState({
+                    buscarPlan: "",
+                    planes: response.data
+                });
+                console.log(response.data);
+            })
+                .catch(e => {
+                    console.log(e);
+                })
+        }
+        const searchResult = this.state.planes.filter(plan => plan.destino.toLowerCase().includes(e.target.value.toLowerCase()))
+        this.setState({
+            buscarPlan: e.target.value,
+            planes: searchResult
         })
-            .catch(e => {
-                console.log(e);
-            });
-    }
+    };
 
-    deleteCliente = () => {
-        ClienteDataService.delete(this.state.currentCliente.ci)
+    deletePlan = () => {
+        PlanDataService.delete(this.state.currentPlan.id)
             .then(response => {
                 console.log(response.data);
                 window.location.reload();
@@ -81,7 +88,7 @@ export default class ListaClientes extends Component {
     }
 
     render() {
-        const { buscarCI, clientes, currentCliente, currentIndex } = this.state;
+        const { buscarPlan, planes, currentPlan, currentIndex } = this.state;
 
         return (
             <div className="list row">
@@ -90,86 +97,81 @@ export default class ListaClientes extends Component {
                         <input
                             type="text"
                             className="form-control"
-                            placeholder="Buscar por cédula"
-                            value={buscarCI}
-                            onChange={this.onChangeBuscarCI}
+                            placeholder="Buscar por destino"
+                            value={buscarPlan}
+                            onChange={this.buscarPlan}
                         />
-
-                        <div className="input-group-append">
-                            <button
-                                className="btn btn-outline-dark"
-                                type="button"
-                                onClick={this.buscarCI}
-                                style={{borderTopLeftRadius: "0%", borderBottomLeftRadius: "0%", borderTopRightRadius: "9%", borderBottomRightRadius: "9%",}}
-                            >
-                                Buscar
-                            </button>
-                        </div>
                     </div>
                 </div>
                 <div className="col-md-6">
-                    <h4>Lista de Clientes</h4>
-
-                    <Link to={"/agregarcliente"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%"}}>
+                    <h4>Lista de Planes</h4>
+                    <Link to={"/agregarplan"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                         Agregar nuevo
                     </Link>
 
                     <ul className="list-group">
-                        {clientes && clientes.map((cliente, index) => (
+                        {planes && planes.map((plan, index) => (
                             <li
                                 className={
                                     "list-group-item" +
                                     (index === currentIndex ? " active" : "")
                                 }
-                                onClick={() => this.setActiveCliente(cliente, index)}
+                                onClick={() => this.setActivePlan(plan, index)}
                                 key={index}
-                                style={{cursor: "pointer"}}>
-                                {cliente.nombre} {cliente.apellido}
+                                style={{ cursor: "pointer" }}>
+                                {plan.destino} ${plan.precio}
                             </li>
                         ))}
                     </ul>
                 </div>
                 <div className="col-md-6">
                     <br></br>
-                    {currentCliente ? (
+                    {currentPlan ? (
                         <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
-                            <h4 style={{ margin: "1%" }}>{currentCliente.nombre} {currentCliente.apellido}</h4>
+                            <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>
                             <div style={{ margin: "1%" }}>
                                 <label>
-                                    <strong>Cédula:</strong>
+                                    <strong>Modalidad:</strong>
                                 </label>{" "}
-                                {currentCliente.ci}
+                                {currentPlan.modalidad}
                             </div>
                             <div style={{ margin: "1%" }}>
                                 <label>
-                                    <strong>Email:</strong>
+                                    <strong>Fecha:</strong>
                                 </label>{" "}
-                                {currentCliente.email}
+                                {currentPlan.fecha}
                             </div>
                             <div style={{ margin: "1%" }}>
                                 <label>
-                                    <strong>Tipo:</strong>
+                                    <strong>Precio:</strong>
                                 </label>{" "}
-                                {currentCliente.tipo}
+                                ${currentPlan.precio}
                             </div>
 
                             <div className="btn btn-primary" style={{ margin: "1%" }}>
                                 <Link
-                                    to={"/clientes/" + currentCliente.ci} style={{ textDecoration: 'none', color: 'white' }}>
+                                    to={"/planes/" + currentPlan.id} style={{ textDecoration: 'none', color: 'white' }}>
                                     Editar
                                 </Link>
                             </div>
 
                             <button
                                 className="btn btn-danger"
-                                onClick={this.deleteCliente}
+                                onClick={this.deletePlan}
                                 style={{ margin: "1%" }}>
                                 Borrar
+                            </button>
+
+                            <button
+                                className="btn btn-success"
+                                onClick={"#"}
+                                style={{ margin: "1%" }}>
+                                Comprar
                             </button>
                         </div>
                     ) : (
                         <div>
-                            <h4>Seleccione un cliente</h4>
+                            <h4>Seleccione un plan</h4>
                         </div>
                     )}
                 </div>

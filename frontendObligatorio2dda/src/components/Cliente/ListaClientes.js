@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ClienteDataService from "../services/cliente.service";
+import ClienteDataService from "../../services/cliente.service";
 import { Link } from "react-router-dom";
 
 export default class ListaClientes extends Component {
@@ -165,6 +165,13 @@ export default class ListaClientes extends Component {
                                 onClick={this.deleteCliente}
                                 style={{ margin: "1%" }}>
                                 Borrar
+                            </button>
+
+                            <button
+                                className="btn btn-warning"
+                                onClick={"#"}
+                                style={{ margin: "1%", color: "white" }}>
+                                Viajes
                             </button>
                         </div>
                     ) : (
