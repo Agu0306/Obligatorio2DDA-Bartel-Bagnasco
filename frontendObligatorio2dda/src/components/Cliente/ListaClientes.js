@@ -16,6 +16,7 @@ export default class ListaClientes extends Component {
             currentIndex: -1,
             buscarCI: ""
         };
+
     }
 
     componentDidMount() {
@@ -71,13 +72,23 @@ export default class ListaClientes extends Component {
     }
 
     deleteCliente = () => {
-        ClienteDataService.delete(this.state.currentCliente.ci)
-            .then(response => {
-                console.log(response.data);
-                window.location.reload();
-            }).catch(e => {
-                console.log(e);
-            })
+        if (this.state.currentCliente.tipo === "Estandar") {
+            ClienteDataService.deleteClienteEstandar(this.state.currentCliente.ci)
+                .then(response => {
+                    console.log(response.data);
+                    window.location.reload();
+                }).catch(e => {
+                    console.log(e);
+                })
+        } else if (this.state.currentCliente.tipo === "Premium") {
+            ClienteDataService.deleteClientePremium(this.state.currentCliente.ci)
+                .then(response => {
+                    console.log(response.data);
+                    window.location.reload();
+                }).catch(e => {
+                    console.log(e);
+                })
+        }
     }
 
     render() {
@@ -100,7 +111,7 @@ export default class ListaClientes extends Component {
                                 className="btn btn-outline-dark"
                                 type="button"
                                 onClick={this.buscarCI}
-                                style={{borderTopLeftRadius: "0%", borderBottomLeftRadius: "0%", borderTopRightRadius: "9%", borderBottomRightRadius: "9%",}}
+                                style={{ borderTopLeftRadius: "0%", borderBottomLeftRadius: "0%", borderTopRightRadius: "9%", borderBottomRightRadius: "9%", }}
                             >
                                 Buscar
                             </button>
@@ -110,7 +121,7 @@ export default class ListaClientes extends Component {
                 <div className="col-md-6">
                     <h4>Lista de Clientes</h4>
 
-                    <Link to={"/agregarcliente"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%"}}>
+                    <Link to={"/agregarcliente"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                         Agregar nuevo
                     </Link>
 
@@ -123,7 +134,7 @@ export default class ListaClientes extends Component {
                                 }
                                 onClick={() => this.setActiveCliente(cliente, index)}
                                 key={index}
-                                style={{cursor: "pointer"}}>
+                                style={{ cursor: "pointer" }}>
                                 {cliente.nombre} {cliente.apellido}
                             </li>
                         ))}
@@ -167,12 +178,12 @@ export default class ListaClientes extends Component {
                                 Borrar
                             </button>
 
-                            <button
-                                className="btn btn-warning"
-                                onClick={"#"}
-                                style={{ margin: "1%", color: "white" }}>
-                                Viajes
-                            </button>
+                            <div className="btn btn-warning" style={{ margin: "1%", color: "white" }}>
+                                <Link
+                                    to={"/planescliente/" + currentCliente.ci} style={{ textDecoration: 'none', color: 'white' }}>
+                                    Viajes
+                                </Link>
+                            </div>
                         </div>
                     ) : (
                         <div>

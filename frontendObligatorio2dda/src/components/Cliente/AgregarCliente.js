@@ -6,7 +6,7 @@ const AgregarCliente = () => {
     let navigate = useNavigate();
 
     const initialClienteState = {
-        ci: null,
+        ci: "",
         apellido: "",
         email: "",
         nombre: "",

@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 export default class ListaPlanes extends Component {
     constructor(props) {
         super(props);
-        this.onChangeBuscarPlan = this.onChangeBuscarPlan.bind(this);
         this.retrievePlan = this.retrievePlanes.bind(this);
         this.refreshLista = this.refreshLista.bind(this);
         this.buscarPlan = this.buscarPlan.bind(this);
@@ -20,14 +19,6 @@ export default class ListaPlanes extends Component {
 
     componentDidMount() {
         this.retrievePlanes();
-    }
-
-    onChangeBuscarPlan(e) {
-        const busqueda = e.target.value;
-
-        this.setState({
-            buscarPlan: busqueda
-        });
     }
 
     retrievePlanes() {
@@ -119,7 +110,7 @@ export default class ListaPlanes extends Component {
                                 onClick={() => this.setActivePlan(plan, index)}
                                 key={index}
                                 style={{ cursor: "pointer" }}>
-                                {plan.destino} ${plan.precio}
+                                {plan.destino} <strong>U$S</strong>{plan.precio}
                             </li>
                         ))}
                     </ul>
@@ -145,7 +136,7 @@ export default class ListaPlanes extends Component {
                                 <label>
                                     <strong>Precio:</strong>
                                 </label>{" "}
-                                ${currentPlan.precio}
+                                U$S{currentPlan.precio}
                             </div>
 
                             <div className="btn btn-primary" style={{ margin: "1%" }}>

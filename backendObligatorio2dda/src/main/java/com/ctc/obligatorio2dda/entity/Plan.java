@@ -2,15 +2,18 @@ package com.ctc.obligatorio2dda.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,13 +73,22 @@ public class Plan implements Serializable {
         this.precio = pPrecio;
     }
 
-    @ManyToMany
-    @JoinTable(
-        name = "planes_cliente",
-        joinColumns = @JoinColumn(name = "plan_id"),
-        inverseJoinColumns = @JoinColumn(name = "cliente_id")
-    )
-    private Set<Cliente> enrolledClientes = new HashSet<>();
+    public void setClientes(Set<Cliente> clientes){
+        this.clientes = clientes;
+    }
+
+    public Set<Cliente> getClientes(){
+        return clientes;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    },
+    mappedBy = "planes")
+    @JsonIgnore
+    private Set<Cliente> clientes = new HashSet<>();
 
     public Plan(String pDestino, Date pFecha, String pModalidad, Double pPrecio) {
         this.destino = pDestino;

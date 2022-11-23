@@ -6,13 +6,14 @@ import Cliente from "./Cliente/Cliente";
 import AgregarPlan from "./Plan/AgregarPlan";
 import ListaPlanes from "./Plan/ListaPlanes";
 import Plan from "./Plan/Plan";
+import ListaPlanesCliente from "./Cliente/ListaPlanesCliente";
 
 class App extends Component {
   render() {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/clientes" className="navbar-brand" style={{marginLeft: "1%"}}>
+          <a href="/planes" className="navbar-brand" style={{marginLeft: "1%"}}>
             Obligatorio
           </a>
           <div className="navbar-nav mr-auto">
@@ -38,6 +39,7 @@ class App extends Component {
             <Route path="/agregarplan" element={<AgregarPlan/>} />
             <Route path="/clientes/:id" element={<Cliente />} />
             <Route path="/planes/:id" element={<Plan />} />
+            <Route path="/planescliente/:id" element={<ListaPlanesCliente/>} />
           </Routes>
         </div>
       </div>

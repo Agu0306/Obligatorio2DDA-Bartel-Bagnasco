@@ -10,7 +10,7 @@ const AgregarPlan = () => {
         destino: "",
         fecha: "",
         modalidad: "",
-        precio: null
+        precio: ""
     };
 
     const [plan, setPlan] = useState(initialPlanState);
@@ -67,6 +67,7 @@ const AgregarPlan = () => {
                         value={plan.fecha}
                         onChange={handleInputChange}
                         name="fecha"
+                        min={new Date().toISOString().split('T')[0]}
                     />
 
                     <label htmlFor="modalidad">Modalidad</label>

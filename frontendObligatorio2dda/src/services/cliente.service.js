@@ -33,7 +33,15 @@ class ClienteDataService {
     return http.put(`/modificarclientepremium/${ci}`, data);
   }
 
-  delete(ci) {
+  deleteClienteEstandar(ci) {
+    return http.delete(`/borrarclienteestandar/${ci}`);
+  }
+
+  deleteClientePremium(ci) {
+    return http.delete(`/borrarclientepremium/${ci}`);
+  }
+
+  delete(ci){
     return http.delete(`/borrarcliente/${ci}`);
   }
 }

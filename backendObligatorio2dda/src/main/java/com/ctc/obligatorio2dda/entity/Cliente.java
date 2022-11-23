@@ -4,18 +4,20 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Cliente implements Serializable {
+public abstract class Cliente implements Serializable {
 
     @Id
     @Column(unique = true)
@@ -33,8 +35,14 @@ public class Cliente implements Serializable {
     @Column
     private String tipo;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "enrolledClientes")
+    @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {
+        CascadeType.PERSIST,
+        CascadeType.MERGE
+    })
+    @JoinTable(name = "planes_clientes",
+    joinColumns = { @JoinColumn(name = "cliente_id")},
+    inverseJoinColumns = { @JoinColumn(name = "plan_id")})
     private Set<Plan> planes = new HashSet<>();
 
     public Long getCI() {
@@ -75,6 +83,19 @@ public class Cliente implements Serializable {
 
     public void setTipo(String pTipo){
         this.tipo = pTipo;
+    }
+
+    public void addPlan(Plan _plan){
+        this.planes.add(_plan);
+        _plan.getClientes().add(this);
+    }
+
+    public void removePlan(Long planId){
+        Plan plan = this.planes.stream().filter(t -> t.getId() == planId).findFirst().orElse(null);
+        if(plan != null){
+            this.planes.remove(plan);
+            plan.getClientes().remove(this);
+        }
     }
 
     public Set<Plan> getPlanes(){

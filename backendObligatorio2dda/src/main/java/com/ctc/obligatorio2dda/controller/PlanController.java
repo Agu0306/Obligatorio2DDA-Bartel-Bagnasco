@@ -13,15 +13,21 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.ctc.obligatorio2dda.entity.Plan;
+import com.ctc.obligatorio2dda.repository.ClienteRepository;
+import com.ctc.obligatorio2dda.repository.PlanRepository;
 import com.ctc.obligatorio2dda.service.PlanServiceImpl;
 
 @CrossOrigin
 @Controller
 @RestController
 @RequestMapping("api")
-public class PlanController{
+public class PlanController {
     @Autowired
     private PlanServiceImpl planServiceImpl;
+    @Autowired
+    private PlanRepository planRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     @PostMapping(value = "/agregarplan")
     public ResponseEntity<?> create(@RequestBody Plan plan) {
@@ -71,9 +77,39 @@ public class PlanController{
 
     @GetMapping("/planes")
     public List<Plan> readAll() {
-        List<Plan> plans = StreamSupport
+        List<Plan> planes = StreamSupport
                 .stream(planServiceImpl.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-        return plans;
+        return planes;
     }
+
+    @GetMapping("/planescliente/{clienteId}")
+    public ResponseEntity<List<Plan>> getPlanesByClienteId(@PathVariable(value = "clienteId") Long clienteId) throws Exception {
+        if (!clienteRepository.existsById(clienteId)) {
+            throw new Exception("No se encuentra cliente con id = " + clienteId);
+        }
+
+        List<Plan> planes = planRepository.findPlanesByClienteId(clienteId);
+        return new ResponseEntity<>(planes, HttpStatus.OK);
+    }
+
+    @PostMapping("/planescliente/{clienteId}/agregar")
+    public ResponseEntity<Plan> addPlan(@PathVariable(value = "clienteId") Long clienteId, @RequestBody Plan planRequest){
+        Optional<Plan> plan = clienteRepository.findById(clienteId).map(cliente -> {
+            Long planId = planRequest.getId();
+
+            if (planId != 0L) {
+                Plan _plan = planRepository.findById(planId).get();
+                cliente.addPlan(_plan);
+                clienteRepository.save(cliente);
+                return _plan;
+            }
+
+            cliente.addPlan(planRequest);
+            return planRepository.save(planRequest);
+        });
+
+        return new ResponseEntity<>(plan.get(), HttpStatus.CREATED);
+    }
+
 }

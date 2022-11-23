@@ -7,5 +7,5 @@ import com.ctc.obligatorio2dda.entity.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long>{
-    
+
 }
