@@ -93,7 +93,7 @@ public class PlanController {
         return new ResponseEntity<>(planes, HttpStatus.OK);
     }
 
-    @PostMapping("/planescliente/{clienteId}/agregar")
+    @PostMapping(value = "/planescliente/{clienteId}/agregar")
     public ResponseEntity<Plan> addPlan(@PathVariable(value = "clienteId") Long clienteId, @RequestBody Plan planRequest){
         Optional<Plan> plan = clienteRepository.findById(clienteId).map(cliente -> {
             Long planId = planRequest.getId();

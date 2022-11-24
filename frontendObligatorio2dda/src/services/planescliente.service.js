@@ -9,8 +9,8 @@ class PlanesClienteDataService {
     return http.get(`/planescliente/${ci}`);
   }
 
-  create(data) {
-    return http.post("/agregarplan", data);
+  create(data, ci) {
+    return http.post(`/planescliente/${ci}/agregar`, data);
   }
 
   delete(ci) {

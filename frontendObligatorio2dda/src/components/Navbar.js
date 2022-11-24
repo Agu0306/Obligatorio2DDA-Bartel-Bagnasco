@@ -6,7 +6,8 @@ import Cliente from "./Cliente/Cliente";
 import AgregarPlan from "./Plan/AgregarPlan";
 import ListaPlanes from "./Plan/ListaPlanes";
 import Plan from "./Plan/Plan";
-import ListaPlanesCliente from "./Cliente/ListaPlanesCliente";
+import ListaPlanesCliente from "./PlanesCliente/ListaPlanesCliente";
+import AgregarPlanCliente from "./PlanesCliente/AgregarPlanCliente";
 
 class App extends Component {
   render() {
@@ -40,6 +41,7 @@ class App extends Component {
             <Route path="/clientes/:id" element={<Cliente />} />
             <Route path="/planes/:id" element={<Plan />} />
             <Route path="/planescliente/:id" element={<ListaPlanesCliente/>} />
+            <Route path="/agregarplanescliente/:id" element={<AgregarPlanCliente/>} />
           </Routes>
         </div>
       </div>
