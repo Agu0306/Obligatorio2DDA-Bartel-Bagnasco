@@ -13,8 +13,8 @@ class PlanesClienteDataService {
     return http.post(`/planescliente/${ci}/agregar`, data);
   }
 
-  delete(ci) {
-    return http.delete(`/borrarplan/${ci}`);
+  delete(ci, data) {
+    return http.delete(`/planescliente/${ci}/borrar`, { data });
   }
 }
 

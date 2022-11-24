@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import com.ctc.obligatorio2dda.entity.Cliente;
 import com.ctc.obligatorio2dda.entity.Plan;
 import com.ctc.obligatorio2dda.repository.ClienteRepository;
 import com.ctc.obligatorio2dda.repository.PlanRepository;
@@ -84,7 +86,8 @@ public class PlanController {
     }
 
     @GetMapping("/planescliente/{clienteId}")
-    public ResponseEntity<List<Plan>> getPlanesByClienteId(@PathVariable(value = "clienteId") Long clienteId) throws Exception {
+    public ResponseEntity<List<Plan>> getPlanesByClienteId(@PathVariable(value = "clienteId") Long clienteId)
+            throws Exception {
         if (!clienteRepository.existsById(clienteId)) {
             throw new Exception("No se encuentra cliente con id = " + clienteId);
         }
@@ -94,7 +97,8 @@ public class PlanController {
     }
 
     @PostMapping(value = "/planescliente/{clienteId}/agregar")
-    public ResponseEntity<Plan> addPlan(@PathVariable(value = "clienteId") Long clienteId, @RequestBody Plan planRequest){
+    public ResponseEntity<Plan> addPlanCliente(@PathVariable(value = "clienteId") Long clienteId,
+            @RequestBody Plan planRequest) {
         Optional<Plan> plan = clienteRepository.findById(clienteId).map(cliente -> {
             Long planId = planRequest.getId();
 
@@ -112,4 +116,33 @@ public class PlanController {
         return new ResponseEntity<>(plan.get(), HttpStatus.CREATED);
     }
 
+    @Transactional
+    @DeleteMapping(value = "/planescliente/{clienteId}/borrar")
+    public ResponseEntity<HttpStatus> deletePlanCliente(@PathVariable(value = "clienteId") Long clienteId,
+            @RequestBody Plan planRequest) {
+        try {
+            Long planId = planRequest.getId();
+            planRepository.deletePlanClienteById(planId, clienteId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    @DeleteMapping(value = "/borrarplancliente/{clienteId}")
+    public void removePlanCliente(@PathVariable(value = "clienteId") Long clienteId, @RequestBody Plan planRequest) {
+        Optional<Cliente> _cliente = clienteRepository.findById(clienteId);
+        Cliente clienteF = (Cliente) _cliente.get();
+        Long planId = planRequest.getId();
+
+        if (planId != 0L) {
+            Plan _plan = planRepository.findById(planId).get();
+            clienteF.removePlan(_plan.getId());
+            planRepository.deletePlanClienteById(planId, clienteId);
+        }
+
+        clienteF.removePlan(planRequest.getId());
+        planRepository.deletePlanClienteById(planRequest.getId(), clienteId);
+    };
 }

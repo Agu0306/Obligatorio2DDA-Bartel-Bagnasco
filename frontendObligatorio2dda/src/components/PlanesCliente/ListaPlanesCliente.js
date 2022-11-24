@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import PlanesClienteDataService from "../../services/planescliente.service";
 import PlanDataService from "../../services/plan.service"
 import { Link } from "react-router-dom";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const ListaPlanes = () => {
     const { id } = useParams();
+    let navigate = useNavigate();
 
     const [planes, setPlanes] = useState([]);
     const [currentPlan, setCurrentPlan] = useState(null);
@@ -14,7 +15,7 @@ const ListaPlanes = () => {
 
     useEffect(() => {
         retrievePlanes();
-    }, []);
+    }, [planes]);
 
     const retrievePlanes = () => {
         PlanesClienteDataService.get(id).then(response => {
@@ -45,6 +46,21 @@ const ListaPlanes = () => {
         setPlanes(searchResult);
     }
 
+    const deletePlanCliente = () => {
+        var data = {
+            id: currentPlan.id
+        };
+
+        PlanesClienteDataService.delete(id, data)
+            .then(response => {
+                console.log(response.data);
+                window.location.reload();
+            }).catch(e => {
+                console.log(e);
+            })
+        navigate("/planescliente/" + id);
+    }
+
     return (
         <div className="list row">
             <div className="col-md-8">
@@ -60,7 +76,7 @@ const ListaPlanes = () => {
             </div>
             <div className="col-md-6">
                 <h4>Lista de planes de {id}</h4>
-                <Link to={"/agregarplan"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
+                <Link to={"/agregarplanescliente/" + id} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                     Agregar nuevo
                 </Link>
 
@@ -71,7 +87,7 @@ const ListaPlanes = () => {
                                 "list-group-item" +
                                 (index === currentIndex ? " active" : "")
                             }
-                            onClick={() => setCurrentPlan(plan, index)}
+                            onClick={() => setActivePlan(plan, index)}
                             key={index}
                             style={{ cursor: "pointer" }}>
                             {plan.destino} <strong>U$S</strong>{plan.precio}
@@ -103,16 +119,9 @@ const ListaPlanes = () => {
                             U$S{currentPlan.precio}
                         </div>
 
-                        <div className="btn btn-primary" style={{ margin: "1%" }}>
-                            <Link
-                                to={"/planescliente/" + currentPlan.id} style={{ textDecoration: 'none', color: 'white' }}>
-                                Editar
-                            </Link>
-                        </div>
-
                         <button
                             className="btn btn-danger"
-                            onClick={"#"}
+                            onClick={deletePlanCliente}
                             style={{ margin: "1%" }}>
                             Borrar
                         </button>

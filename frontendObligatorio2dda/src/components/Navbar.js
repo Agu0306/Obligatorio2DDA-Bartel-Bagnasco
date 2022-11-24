@@ -7,7 +7,7 @@ import AgregarPlan from "./Plan/AgregarPlan";
 import ListaPlanes from "./Plan/ListaPlanes";
 import Plan from "./Plan/Plan";
 import ListaPlanesCliente from "./PlanesCliente/ListaPlanesCliente";
-import AgregarPlanCliente from "./PlanesCliente/AgregarPlanCliente";
+import AgregarPlanCliente from "./PlanesCliente/PlanesCliente";
 
 class App extends Component {
   render() {

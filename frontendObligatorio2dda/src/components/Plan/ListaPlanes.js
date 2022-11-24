@@ -152,13 +152,6 @@ export default class ListaPlanes extends Component {
                                 style={{ margin: "1%" }}>
                                 Borrar
                             </button>
-
-                            <button
-                                className="btn btn-success"
-                                onClick={"#"}
-                                style={{ margin: "1%" }}>
-                                Comprar
-                            </button>
                         </div>
                     ) : (
                         <div>
