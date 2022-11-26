@@ -13,7 +13,6 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.ctc.obligatorio2dda.entity.ClienteEstandar;
-
 import com.ctc.obligatorio2dda.service.ClienteEstandarServiceImpl;
 
 @CrossOrigin

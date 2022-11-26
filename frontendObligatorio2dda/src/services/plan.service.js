@@ -17,8 +17,12 @@ class PlanDataService {
     return http.put(`/modificarplan/${id}`, data);
   }
 
-  delete(id) {
+  delete(id, data) {
     return http.delete(`/borrarplan/${id}`);
+  }
+
+  updatePlanEliminado(id, data){
+    return http.put(`/modificarplaneliminado/${id}`, data);
   }
 }
 

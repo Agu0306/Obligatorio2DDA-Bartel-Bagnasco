@@ -61,8 +61,8 @@ public class ClienteController{
     }
 
     @GetMapping("/clientes/{id}")
-    public ResponseEntity<?> read(@PathVariable(value = "id") Long clienteId) {
-        Optional<Cliente> unCliente = clienteServiceImpl.findById(clienteId);
+    public ResponseEntity<?> read(@PathVariable(value = "id") Long id) {
+        Optional<Cliente> unCliente = clienteServiceImpl.findById(id);
         if (!unCliente.isPresent()) {
             return ResponseEntity.notFound().build();
         }

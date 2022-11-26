@@ -78,6 +78,21 @@ export default class ListaPlanes extends Component {
             })
     }
 
+    changeEliminado = () => {
+        PlanDataService.updatePlanEliminado(
+            this.state.currentPlan.id,
+            this.state.currentPlan
+        )
+            .then(response => {
+                this.setState({
+                    eliminado: "Si"
+                })
+                console.log(response.data);
+            }).catch(e => {
+                console.log(e);
+            })
+    }
+
     render() {
         const { buscarPlan, planes, currentPlan, currentIndex } = this.state;
 
@@ -116,7 +131,6 @@ export default class ListaPlanes extends Component {
                     </ul>
                 </div>
                 <div className="col-md-6">
-                    <br></br>
                     {currentPlan ? (
                         <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
                             <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>
@@ -145,6 +159,12 @@ export default class ListaPlanes extends Component {
                                     Editar
                                 </Link>
                             </div>
+
+                            <button 
+                                className="btn btn-secondary"
+                                onClick={this.changeEliminado}>
+                                Cambiar
+                            </button>
 
                             <button
                                 className="btn btn-danger"

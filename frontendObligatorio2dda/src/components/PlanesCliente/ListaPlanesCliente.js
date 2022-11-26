@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PlanesClienteDataService from "../../services/planescliente.service";
 import PlanDataService from "../../services/plan.service"
+import ClienteDataService from "../../services/cliente.service"
 import { Link } from "react-router-dom";
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -8,18 +9,42 @@ const ListaPlanes = () => {
     const { id } = useParams();
     let navigate = useNavigate();
 
+    const initialClienteState = {
+        id: "",
+        nombre: "",
+        apellido: "",
+        email: "",
+        tipo: ""
+    };
+
     const [planes, setPlanes] = useState([]);
+    const [planesFiltrados, setPlanesFiltrados] = useState([]);
     const [currentPlan, setCurrentPlan] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [searchPlan, setSearchPlan] = useState("");
+    const [currentCliente, setCurrentCliente] = useState(initialClienteState);
+    const [fecha, setFecha] = useState("");
 
     useEffect(() => {
+        getCliente(id);
         retrievePlanes();
-    }, [planes]);
+    }, []);
+
+    const getCliente = id => {
+        ClienteDataService.get(id)
+            .then(response => {
+                setCurrentCliente(response.data);
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
 
     const retrievePlanes = () => {
         PlanesClienteDataService.get(id).then(response => {
             setPlanes(response.data);
+            setPlanesFiltrados(response.data);
             console.log(response.data);
         }).catch(e => {
             console.log(e);
@@ -61,6 +86,16 @@ const ListaPlanes = () => {
         navigate("/planescliente/" + id);
     }
 
+    const changeFecha = e => {
+        setFecha(e.target.value);
+    };
+
+    const buscarFecha = () => {
+        setPlanesFiltrados(planes.filter(plan => plan.fecha > fecha));
+        setCurrentPlan(planesFiltrados[0]);
+        setCurrentIndex(-1);
+    }
+
     return (
         <div className="list row">
             <div className="col-md-8">
@@ -75,10 +110,28 @@ const ListaPlanes = () => {
                 </div>
             </div>
             <div className="col-md-6">
-                <h4>Lista de planes de {id}</h4>
+                <h4>Lista de planes de {currentCliente.nombre} {currentCliente.apellido}</h4>
                 <Link to={"/agregarplanescliente/" + id} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                     Agregar nuevo
                 </Link>
+                <h5>Primer viaje después de:</h5>
+                <div className="input-group mb-3">
+                    <input
+                        type="date"
+                        className="form-control"
+                        id="fecha"
+                        required
+                        value={fecha}
+                        onChange={changeFecha}
+                        name="fecha"
+                    />
+
+                    <div className="input-group-append">
+                        <button onClick={buscarFecha} className="btn btn-outline-dark">
+                            Buscar
+                        </button>
+                    </div>
+                </div>
 
                 <ul className="list-group">
                     {planes && planes.map((plan, index) => (
@@ -96,7 +149,6 @@ const ListaPlanes = () => {
                 </ul>
             </div>
             <div className="col-md-6">
-                <br></br>
                 {currentPlan ? (
                     <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
                         <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>

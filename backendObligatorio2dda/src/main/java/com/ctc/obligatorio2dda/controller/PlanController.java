@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import com.ctc.obligatorio2dda.entity.Cliente;
 import com.ctc.obligatorio2dda.entity.Plan;
 import com.ctc.obligatorio2dda.repository.ClienteRepository;
 import com.ctc.obligatorio2dda.repository.PlanRepository;
@@ -52,6 +52,23 @@ public class PlanController {
             _plan.setFecha(plan.getFecha());
             _plan.setModalidad(plan.getModalidad());
             _plan.setPrecio(plan.getPrecio());
+            _plan.setEliminado(plan.getEliminado());
+            return new ResponseEntity<>(planServiceImpl.save(_plan), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/modificarplaneliminado/{id}")
+    public ResponseEntity<Plan> updateEliminado(@PathVariable("id") Long id, @RequestBody Plan plan) {
+        Optional<Plan> planData = planServiceImpl.findById(id);
+        if (planData.isPresent()) {
+            Plan _plan = planData.get();
+            _plan.setDestino(plan.getDestino());
+            _plan.setFecha(plan.getFecha());
+            _plan.setModalidad(plan.getModalidad());
+            _plan.setPrecio(plan.getPrecio());
+            _plan.setEliminado("Si");
             return new ResponseEntity<>(planServiceImpl.save(_plan), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -80,7 +97,7 @@ public class PlanController {
     @GetMapping("/planes")
     public List<Plan> readAll() {
         List<Plan> planes = StreamSupport
-                .stream(planServiceImpl.findAll().spliterator(), false)
+                .stream(planRepository.findAllPlanesNoEliminados().spliterator(), false)
                 .collect(Collectors.toList());
         return planes;
     }
@@ -129,20 +146,17 @@ public class PlanController {
         }
     }
 
-    @Transactional
-    @DeleteMapping(value = "/borrarplancliente/{clienteId}")
-    public void removePlanCliente(@PathVariable(value = "clienteId") Long clienteId, @RequestBody Plan planRequest) {
-        Optional<Cliente> _cliente = clienteRepository.findById(clienteId);
-        Cliente clienteF = (Cliente) _cliente.get();
-        Long planId = planRequest.getId();
+    @Modifying
+    @PostMapping(value = "/planescliente/{clienteId}/agregaraux")
+    public void addPlanClienteAux(@PathVariable(value = "clienteId") Long clienteId) {
+        planRepository.auxPlanesCliente(clienteId);
+    }
 
-        if (planId != 0L) {
-            Plan _plan = planRepository.findById(planId).get();
-            clienteF.removePlan(_plan.getId());
-            planRepository.deletePlanClienteById(planId, clienteId);
-        }
-
-        clienteF.removePlan(planRequest.getId());
-        planRepository.deletePlanClienteById(planRequest.getId(), clienteId);
-    };
+    @GetMapping("/planessinasignar/{clienteId}")
+    public List<Plan> readAllPlanesSinAsignar(@PathVariable("clienteId") Long clienteId) {
+        List<Plan> planes = StreamSupport
+                .stream(planRepository.findPlanesNotInPlanesCliente(clienteId).spliterator(), false)
+                .collect(Collectors.toList());
+        return planes;
+    }
 }

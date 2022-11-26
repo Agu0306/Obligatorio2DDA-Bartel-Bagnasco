@@ -44,7 +44,7 @@ export default class ListaClientes extends Component {
     }
 
     refreshLista() {
-        this.retrieveCliente();
+        this.retrieveClientes();
         this.setState({
             currentCliente: null,
             currentIndex: -1
@@ -141,7 +141,6 @@ export default class ListaClientes extends Component {
                     </ul>
                 </div>
                 <div className="col-md-6">
-                    <br></br>
                     {currentCliente ? (
                         <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
                             <h4 style={{ margin: "1%" }}>{currentCliente.nombre} {currentCliente.apellido}</h4>
@@ -187,7 +186,7 @@ export default class ListaClientes extends Component {
                         </div>
                     ) : (
                         <div>
-                            <h4>Seleccione un cliente</h4>
+                            <h4 style={{margin: "0"}}>Seleccione un cliente</h4>
                         </div>
                     )}
                 </div>

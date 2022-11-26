@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PlanesClienteDataService from "../../services/planescliente.service";
+import ClienteDataService from "../../services/cliente.service"
 import { Link } from "react-router-dom";
 import { useParams, useNavigate } from 'react-router-dom';
 import PlanDataService from "../../services/plan.service"
@@ -12,18 +13,39 @@ const AgregarPlanCliente = () => {
         id: ""
     };
 
+    const initialClienteState = {
+        id: "",
+        nombre: "",
+        apellido: "",
+        email: "",
+        tipo: ""
+    };
+
     const [planCliente, setPlanCliente] = useState(initialPlanState);
     const [planes, setPlanes] = useState([]);
     const [currentPlan, setCurrentPlan] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(-1);
     const [searchPlan, setSearchPlan] = useState("");
+    const [currentCliente, setCurrentCliente] = useState(initialClienteState);
 
     useEffect(() => {
+        getCliente(id);
         retrievePlanes();
     }, []);
 
+    const getCliente = id => {
+        ClienteDataService.get(id)
+            .then(response => {
+                setCurrentCliente(response.data);
+                console.log(response.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    };
+
     const retrievePlanes = () => {
-        PlanDataService.getAll().then(response => {
+        PlanesClienteDataService.getAllNoAsignados(id).then(response => {
             setPlanes(response.data);
             console.log(response.data);
         }).catch(e => {
@@ -59,6 +81,7 @@ const AgregarPlanCliente = () => {
         })
 
         navigate("/planescliente/" + id);
+        window.location.reload();
     }
 
     const setActivePlan = (plan, index) => {
@@ -80,7 +103,7 @@ const AgregarPlanCliente = () => {
                 </div>
             </div>
             <div className="col-md-6">
-                <h4>Comprar viaje para {id}</h4>
+                <h4>Comprar viaje para {currentCliente.nombre} {currentCliente.apellido}</h4>
                 <Link to={"/agregarplan"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                     Agregar nuevo
                 </Link>
@@ -101,7 +124,6 @@ const AgregarPlanCliente = () => {
                 </ul>
             </div>
             <div className="col-md-6">
-                <br></br>
                 {currentPlan ? (
                     <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
                         <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>

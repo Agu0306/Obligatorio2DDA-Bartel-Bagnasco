@@ -18,4 +18,13 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query(value = "DELETE FROM planes_clientes WHERE cliente_id = :clienteId AND plan_id = :planId", nativeQuery = true)
     @Modifying
     public void deletePlanClienteById(@Param("planId") Long planId, @Param("clienteId") Long clienteId);
+
+    @Query(value = "SELECT p.* FROM planes p WHERE p.eliminado = 'No'", nativeQuery = true)
+    public List<Plan> findAllPlanesNoEliminados();
+
+    @Query(value = "INSERT INTO planesclienteaux SELECT pc.cliente_id, pc.plan_id FROM planes_clientes pc WHERE pc.cliente_id = :clienteId", nativeQuery = true)
+    public void auxPlanesCliente(@Param("clienteId") Long clienteId);
+
+    @Query(value = "SELECT p.* FROM planes p WHERE p.eliminado = 'No' AND p.id NOT IN (SELECT p.id FROM planes p INNER JOIN planes_clientes pc ON p.id = pc.plan_id WHERE pc.cliente_id = :clienteId)", nativeQuery = true)
+    public List<Plan> findPlanesNotInPlanesCliente(@Param("clienteId") Long clienteId);
 }

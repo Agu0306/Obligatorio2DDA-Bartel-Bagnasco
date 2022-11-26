@@ -6,11 +6,12 @@ const AgregarPlan = () => {
     let navigate = useNavigate();
 
     const initialPlanState = {
-        id: null,
+        id: "",
         destino: "",
         fecha: "",
         modalidad: "",
-        precio: ""
+        precio: "",
+        eliminado: "No"
     };
 
     const [plan, setPlan] = useState(initialPlanState);
@@ -25,7 +26,8 @@ const AgregarPlan = () => {
             destino: plan.destino,
             fecha: plan.fecha,
             modalidad: plan.modalidad,
-            precio: plan.precio
+            precio: plan.precio,
+            eliminado: plan.eliminado
         };
 
         PlanDataService.create(data).then(response => {
@@ -33,7 +35,8 @@ const AgregarPlan = () => {
                 destino: response.data.destino,
                 fecha: response.data.fecha,
                 modalidad: response.data.modalidad,
-                precio: response.data.precio
+                precio: response.data.precio,
+                eliminado: response.data.eliminado
             });
             console.log(response.data);
             navigate("/planes")

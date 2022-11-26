@@ -17,10 +17,10 @@ import javax.persistence.ManyToMany;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Cliente implements Serializable {
+public class Cliente implements Serializable {
 
     @Id
-    @Column(unique = true)
+    @Column()
     private Long CI;
 
     @Column(length = 30)

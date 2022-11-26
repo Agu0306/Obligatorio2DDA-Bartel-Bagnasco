@@ -5,16 +5,24 @@ class PlanesClienteDataService {
     return http.get("/planescliente");
   }
 
-  get(ci) {
-    return http.get(`/planescliente/${ci}`);
+  get(id) {
+    return http.get(`/planescliente/${id}`);
   }
 
-  create(data, ci) {
-    return http.post(`/planescliente/${ci}/agregar`, data);
+  create(data, id) {
+    return http.post(`/planescliente/${id}/agregar`, data);
   }
 
-  delete(ci, data) {
-    return http.delete(`/planescliente/${ci}/borrar`, { data });
+  delete(id, data) {
+    return http.delete(`/planescliente/${id}/borrar`, { data });
+  }
+
+  getAllNoAsignados(id){
+    return http.get(`/planessinasignar/${id}`)
+  }
+
+  planMasCercanoAFecha(id, fecha){
+    return http.get(`/planescliente/${id}/planmascercano`, { fecha })
   }
 }
 

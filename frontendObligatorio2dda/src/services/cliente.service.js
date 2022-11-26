@@ -13,8 +13,8 @@ class ClienteDataService {
     return http.get("/clientespremium");
   }
 
-  get(ci) {
-    return http.get(`/clientes/${ci}`);
+  get(id) {
+    return http.get(`/clientes/${id}`);
   }
 
   createClienteEstandar(data) {
@@ -25,24 +25,24 @@ class ClienteDataService {
     return http.post("/agregarclientepremium", data);
   }
 
-  updateClienteEstandar(ci, data) {
-    return http.put(`/modificarclienteestandar/${ci}`, data);
+  updateClienteEstandar(id, data) {
+    return http.put(`/modificarclienteestandar/${id}`, data);
   }
 
-  updateClientePremium(ci, data) {
-    return http.put(`/modificarclientepremium/${ci}`, data);
+  updateClientePremium(id, data) {
+    return http.put(`/modificarclientepremium/${id}`, data);
   }
 
-  deleteClienteEstandar(ci) {
-    return http.delete(`/borrarclienteestandar/${ci}`);
+  deleteClienteEstandar(id) {
+    return http.delete(`/borrarclienteestandar/${id}`);
   }
 
-  deleteClientePremium(ci) {
-    return http.delete(`/borrarclientepremium/${ci}`);
+  deleteClientePremium(id) {
+    return http.delete(`/borrarclientepremium/${id}`);
   }
 
-  delete(ci){
-    return http.delete(`/borrarcliente/${ci}`);
+  delete(id){
+    return http.delete(`/borrarcliente/${id}`);
   }
 }
 

@@ -37,6 +37,9 @@ public class Plan implements Serializable {
     @Column()
     private Double precio;
 
+    @Column()
+    private String eliminado;
+
     public Long getId() {
         return id;
     }
@@ -73,6 +76,14 @@ public class Plan implements Serializable {
         this.precio = pPrecio;
     }
 
+    public String getEliminado() {
+        return eliminado;
+    }
+
+    public void setEliminado(String eliminado) {
+        this.eliminado = eliminado;
+    }
+
     public void setClientes(Set<Cliente> clientes){
         this.clientes = clientes;
     }
@@ -90,11 +101,12 @@ public class Plan implements Serializable {
     @JsonIgnore
     private Set<Cliente> clientes = new HashSet<>();
 
-    public Plan(String pDestino, Date pFecha, String pModalidad, Double pPrecio) {
+    public Plan(String pDestino, Date pFecha, String pModalidad, Double pPrecio, String pEliminado) {
         this.destino = pDestino;
         this.fecha = pFecha;
         this.modalidad = pModalidad;
         this.precio = pPrecio;
+        this.eliminado = pEliminado;
     }
 
     public Plan(){ }

@@ -7,11 +7,12 @@ const Plan = props => {
     let navigate = useNavigate();
 
     const initialPlanState = {
-        id: null,
+        id: "",
         destino: "",
         fecha: "",
         modalidad: "",
-        precio: null
+        precio: "",
+        eliminado: ""
     };
 
     const [currentPlan, setCurrentPlan] = useState(initialPlanState);
@@ -121,8 +122,7 @@ const Plan = props => {
                 </div>
             ) : (
                 <div>
-                    <br></br>
-                    <p>Haga click en un plan</p>
+                    <p>Seleccione un plan</p>
                 </div>
             )}
         </div>
