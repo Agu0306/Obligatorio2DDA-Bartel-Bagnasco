@@ -1,8 +1,8 @@
 import http from "../http-common";
 
 class PlanesClienteDataService {
-  getAll() {
-    return http.get("/planescliente");
+  getPlanInPlanesClientes(id){
+    return http.get(`/planenplanesclientes/${id}`);
   }
 
   get(id) {

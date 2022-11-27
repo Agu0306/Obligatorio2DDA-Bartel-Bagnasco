@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PlanDataService from "../../services/plan.service";
+import PlanesClienteDataService from "../../services/planescliente.service";
 import { Link } from "react-router-dom";
 
 export default class ListaPlanes extends Component {
@@ -11,9 +12,11 @@ export default class ListaPlanes extends Component {
 
         this.state = {
             planes: [],
+            plan: "",
             currentPlan: null,
             currentIndex: -1,
-            buscarPlan: ""
+            buscarPlan: "",
+            message: ""
         };
     }
 
@@ -46,6 +49,7 @@ export default class ListaPlanes extends Component {
             currentPlan: plan,
             currentIndex: index
         });
+        this.verificarPlanAEliminar(plan.id);
     }
 
     buscarPlan(e) {
@@ -68,14 +72,38 @@ export default class ListaPlanes extends Component {
         })
     };
 
-    deletePlan = () => {
-        PlanDataService.delete(this.state.currentPlan.id)
+    verificarPlanAEliminar = (planId) => {
+        PlanesClienteDataService.getPlanInPlanesClientes(planId)
             .then(response => {
+                this.setState({
+                    plan: response.data
+                })
                 console.log(response.data);
-                window.location.reload();
             }).catch(e => {
                 console.log(e);
             })
+    }
+
+    reloadPage = () => {
+        window.location.reload();
+    }
+
+    deletePlan = () => {
+        if (this.state.plan === "") {
+            PlanDataService.delete(this.state.currentPlan.id)
+                .then(response => {
+                    console.log(response.data);
+                    window.location.reload();
+                }).catch(e => {
+                    console.log(e);
+                })
+        } else {
+            this.setState({
+                message: "No se pueden eliminar planes que tienen clientes asignados"
+            })
+            setTimeout(this.reloadPage, 1000);
+            return this.state.message;
+        }
     }
 
     changeEliminado = () => {
@@ -116,6 +144,10 @@ export default class ListaPlanes extends Component {
                         Agregar nuevo
                     </Link>
 
+                    <Link to={"/planeseliminados"} className="btn btn-secondary" style={{ marginTop: "1%", marginBottom: "1%", marginLeft: "2%" }}>
+                        Planes eliminados
+                    </Link>
+
                     <ul className="list-group">
                         {planes && planes.map((plan, index) => (
                             <li
@@ -129,6 +161,8 @@ export default class ListaPlanes extends Component {
                                 {plan.destino} <strong>U$S</strong>{plan.precio}
                             </li>
                         ))}
+
+                        <p style={{ color: "red", marginTop: "2%", fontSize:"1.2rem" }}>{this.state.message}</p>
                     </ul>
                 </div>
                 <div className="col-md-6">
@@ -164,7 +198,7 @@ export default class ListaPlanes extends Component {
                             <button
                                 className="btn btn-secondary"
                                 onClick={this.changeEliminado}>
-                                Cambiar
+                                Desactivar
                             </button>
 
                             <button

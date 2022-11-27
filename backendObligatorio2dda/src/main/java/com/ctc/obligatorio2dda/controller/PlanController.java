@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
@@ -126,20 +125,27 @@ public class PlanController {
         return planes;
     }
 
+    @GetMapping("/planenplanesclientes/{planId}")
+    public ResponseEntity<?> findPlanInPlanesClientes(@PathVariable(value = "planId") Long planId){
+        Optional<Long> unPlan = planRepository.findPlanInPlanesClientes(planId);
+        if (!unPlan.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(unPlan);
+    }
+
     @GetMapping("/planescliente/{clienteId}")
     public ResponseEntity<List<Plan>> getPlanesByClienteId(@PathVariable(value = "clienteId") Long clienteId)
             throws Exception {
         if (!clienteRepository.existsById(clienteId)) {
             throw new Exception("No se encuentra cliente con id = " + clienteId);
         }
-
         List<Plan> planes = planRepository.findPlanesByClienteId(clienteId);
         return new ResponseEntity<>(planes, HttpStatus.OK);
     }
 
     @PostMapping(value = "/planescliente/{clienteId}/agregar")
-    public ResponseEntity<Plan> addPlanCliente(@PathVariable(value = "clienteId") Long clienteId,
-            @RequestBody Plan planRequest) {
+    public ResponseEntity<Plan> addPlanCliente(@PathVariable(value = "clienteId") Long clienteId, @RequestBody Plan planRequest) {
         Optional<Plan> plan = clienteRepository.findById(clienteId).map(cliente -> {
             Long planId = planRequest.getId();
 
@@ -168,12 +174,6 @@ public class PlanController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @Modifying
-    @PostMapping(value = "/planescliente/{clienteId}/agregaraux")
-    public void addPlanClienteAux(@PathVariable(value = "clienteId") Long clienteId) {
-        planRepository.auxPlanesCliente(clienteId);
     }
 
     @GetMapping("/planessinasignar/{clienteId}")

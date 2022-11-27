@@ -124,6 +124,10 @@ const ListaPlanes = () => {
         verificarClientePremium(currentCliente);
     };
 
+    const reloadPage = () => {
+        window.location.reload();
+    }
+
     return (
         <div className="list row">
             <div className="col-md-8">
@@ -142,6 +146,11 @@ const ListaPlanes = () => {
                 <Link to={"/agregarplanescliente/" + id} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                     Agregar nuevo
                 </Link>
+
+                
+                <button className="btn btn-secondary" style={{marginLeft: "2%"}} onClick={reloadPage}>
+                    Actualizar cliente
+                </button>
 
                 <h5>Primer viaje después de:</h5>
 
@@ -266,8 +275,7 @@ const ListaPlanes = () => {
                             <h4>Seleccione un plan</h4>
                         </div>
                     )}
-                </div>
-                )}
+                </div>)}
         </div>
     );
 }

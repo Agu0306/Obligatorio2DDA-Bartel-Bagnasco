@@ -89,11 +89,17 @@ export default class ListaClientes extends Component {
                 <div className="col-md-8">
                     <div className="input-group mb-3">
                         <input
+                            onKeyPress={(event) => {
+                                if (!/[0-9]/.test(event.key)) {
+                                    event.preventDefault();
+                                }
+                            }}
                             type="text"
                             className="form-control"
                             placeholder="Buscar por cédula"
                             value={buscarCI}
                             onChange={this.onChangeBuscarCI}
+                            maxLength={8}
                         />
 
                         <div className="input-group-append">

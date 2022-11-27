@@ -14,6 +14,7 @@ const AgregarCliente = () => {
     };
 
     const [cliente, setCliente] = useState(initialClienteState);
+    const [message, setMessage] = useState("");
 
     const handleInputChange = event => {
         const { name, value } = event.target;
@@ -29,27 +30,32 @@ const AgregarCliente = () => {
             tipo: "Estandar"
         };
 
-        ClienteDataService.create(data).then(response => {
-            setCliente({
-                ci: response.data.ci,
-                apellido: response.data.apellido,
-                email: response.data.email,
-                nombre: response.data.nombre,
-                tipo: response.data.tipo
-            });
-            console.log(response.data);
-            navigate("/clientes")
-        })
-            .catch(e => {
-                console.log(e.response.data);
+        if (data.ci.length < 8) {
+            setMessage("Cédula no válida");
+            return message;
+        } else {
+            ClienteDataService.create(data).then(response => {
+                setCliente({
+                    ci: response.data.ci,
+                    apellido: response.data.apellido,
+                    email: response.data.email,
+                    nombre: response.data.nombre,
+                    tipo: response.data.tipo
+                });
+                console.log(response.data);
+                navigate("/clientes")
             })
+                .catch(e => {
+                    console.log(e.response.data);
+                })
+        }
     }
 
     return (
         <div className="submit-form">
             <div>
                 <div className="form-group">
-                    <label htmlFor="ci">Cédula</label>
+                    <label htmlFor="ci" style={{ marginTop: "0.5%" }}>Cédula</label>
                     <input
                         onKeyPress={(event) => {
                             if (!/[0-9]/.test(event.key)) {
@@ -66,7 +72,7 @@ const AgregarCliente = () => {
                         maxLength={8}
                     />
 
-                    <label htmlFor="nombre">Nombre</label>
+                    <label htmlFor="nombre" style={{ marginTop: "0.5%" }}>Nombre</label>
                     <input
                         type="text"
                         className="form-control"
@@ -75,9 +81,10 @@ const AgregarCliente = () => {
                         value={cliente.nombre}
                         onChange={handleInputChange}
                         name="nombre"
+                        maxLength={30}
                     />
 
-                    <label htmlFor="apellido">Apellido</label>
+                    <label htmlFor="apellido" style={{ marginTop: "0.5%" }}>Apellido</label>
                     <input
                         type="text"
                         className="form-control"
@@ -86,9 +93,10 @@ const AgregarCliente = () => {
                         value={cliente.apellido}
                         onChange={handleInputChange}
                         name="apellido"
+                        maxLength={30}
                     />
 
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email" style={{ marginTop: "0.5%" }}>Email</label>
                     <input
                         type="email"
                         className="form-control"
@@ -97,11 +105,11 @@ const AgregarCliente = () => {
                         value={cliente.email}
                         onChange={handleInputChange}
                         name="email"
+                        maxLength={30}
                     />
 
                 </div>
-
-                <br></br>
+                <p style={{ color: "red", marginTop: "1%" }}>{message}</p>
                 <button onClick={saveCliente} className="btn btn-success">
                     Agregar
                 </button>

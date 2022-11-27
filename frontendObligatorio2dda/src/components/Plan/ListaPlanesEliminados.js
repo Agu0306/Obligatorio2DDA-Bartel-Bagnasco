@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PlanDataService from "../../services/plan.service";
+import PlanesClienteDataService from "../../services/planescliente.service"
 import { Link } from "react-router-dom";
 
 export default class ListaPlanesEliminados extends Component {
@@ -11,6 +12,8 @@ export default class ListaPlanesEliminados extends Component {
 
         this.state = {
             planes: [],
+            plan: "",
+            message: "",
             currentPlan: null,
             currentIndex: -1,
             buscarPlan: ""
@@ -46,6 +49,7 @@ export default class ListaPlanesEliminados extends Component {
             currentPlan: plan,
             currentIndex: index
         });
+        this.verificarPlanAEliminar(plan.id);
     }
 
     buscarPlan(e) {
@@ -68,16 +72,6 @@ export default class ListaPlanesEliminados extends Component {
         })
     };
 
-    deletePlan = () => {
-        PlanDataService.delete(this.state.currentPlan.id)
-            .then(response => {
-                console.log(response.data);
-                window.location.reload();
-            }).catch(e => {
-                console.log(e);
-            })
-    }
-
     changeEliminado = () => {
         PlanDataService.updatePlanEliminadoANo(
             this.state.currentPlan.id,
@@ -92,6 +86,40 @@ export default class ListaPlanesEliminados extends Component {
             }).catch(e => {
                 console.log(e);
             })
+    }
+
+    verificarPlanAEliminar = (planId) => {
+        PlanesClienteDataService.getPlanInPlanesClientes(planId)
+            .then(response => {
+                this.setState({
+                    plan: response.data
+                })
+                console.log(response.data);
+            }).catch(e => {
+                console.log(e);
+            })
+    }
+
+    reloadPage = () => {
+        window.location.reload();
+    }
+
+    deletePlan = () => {
+        if (this.state.plan === "") {
+            PlanDataService.delete(this.state.currentPlan.id)
+                .then(response => {
+                    console.log(response.data);
+                    window.location.reload();
+                }).catch(e => {
+                    console.log(e);
+                })
+        } else {
+            this.setState({
+                message: "No se pueden eliminar planes que tienen clientes asignados"
+            })
+            setTimeout(this.reloadPage, 1000);
+            return this.state.message;
+        }
     }
 
     render() {
@@ -112,9 +140,7 @@ export default class ListaPlanesEliminados extends Component {
                 </div>
                 <div className="col-md-6">
                     <h4>Lista de planes eliminados</h4>
-                    <Link to={"/agregarplan"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
-                        Agregar nuevo
-                    </Link>
+                    <p>Estos planes no están disponibles para asignarles nuevos clientes</p>
 
                     <ul className="list-group">
                         {planes && planes.map((plan, index) => (
@@ -130,6 +156,7 @@ export default class ListaPlanesEliminados extends Component {
                             </li>
                         ))}
                     </ul>
+                    <p style={{ color: "red", marginTop: "2%", fontSize: "1.2rem" }}>{this.state.message}</p>
                 </div>
                 <div className="col-md-6">
                     {currentPlan ? (
@@ -164,7 +191,7 @@ export default class ListaPlanesEliminados extends Component {
                             <button
                                 className="btn btn-secondary"
                                 onClick={this.changeEliminado}>
-                                Cambiar
+                                Activar
                             </button>
 
                             <button

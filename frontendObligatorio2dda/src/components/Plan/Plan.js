@@ -40,6 +40,7 @@ const Plan = props => {
     };
 
     const updatePlan = () => {
+        if(currentPlan.modalidad === "Aérea" || currentPlan.modalidad === "Terrestre" || currentPlan.modalidad === "Marítima"){
         PlanDataService.update(
             currentPlan.id,
             currentPlan
@@ -51,6 +52,10 @@ const Plan = props => {
             }).catch(e => {
                 console.log(e);
             })
+        }else{
+            setMessage("Modalidad no válida, solo se permite 'Marítima', 'Terrestre' o 'Aérea'")
+            return message;
+        }
     }
 
     return (
@@ -60,7 +65,7 @@ const Plan = props => {
                     <h4>Plan</h4>
                     <form>
                         <div className="form-group">
-                            <label htmlFor="destino">Destino</label>
+                            <label htmlFor="destino" style={{ marginTop: "0.5%" }}>Destino</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -69,9 +74,10 @@ const Plan = props => {
                                 value={currentPlan.destino}
                                 onChange={handleInputChange}
                                 name="destino"
+                                maxLength={20}
                             />
 
-                            <label htmlFor="fecha">Fecha</label>
+                            <label htmlFor="fecha" style={{ marginTop: "0.5%" }}>Fecha</label>
                             <input
                                 type="date"
                                 className="form-control"
@@ -82,7 +88,7 @@ const Plan = props => {
                                 name="fecha"
                             />
 
-                            <label htmlFor="modalidad">Modalidad</label>
+                            <label htmlFor="modalidad" style={{ marginTop: "0.5%" }}>Modalidad</label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -93,7 +99,7 @@ const Plan = props => {
                                 name="modalidad"
                             />
 
-                            <label htmlFor="precio">Precio</label>
+                            <label htmlFor="precio" style={{ marginTop: "0.5%" }}>Precio</label>
                             <input
                                 onKeyPress={(event) => {
                                     if (!/[0-9]/.test(event.key)) {
@@ -111,14 +117,13 @@ const Plan = props => {
                         </div>
                     </form>
 
-                    <br></br>
+                    <p style={{ color: "red", marginTop: "1%" }}>{message}</p>
                     <button
                         type="submit"
                         className="btn btn-success"
                         onClick={updatePlan}>
                         Modificar
                     </button>
-                    <p>{message}</p>
                 </div>
             ) : (
                 <div>

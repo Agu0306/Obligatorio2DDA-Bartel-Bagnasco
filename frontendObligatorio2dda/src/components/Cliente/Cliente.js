@@ -59,7 +59,7 @@ const Cliente = props => {
                     <h4>Cliente</h4>
                     <form>
                         <div className="form-group">
-                            <label htmlFor="ci"><strong>Cédula</strong></label>
+                            <label htmlFor="ci" style={{ marginTop: "0.5%" }}><strong>Cédula</strong></label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -73,7 +73,7 @@ const Cliente = props => {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="nombre"><strong>Nombre</strong></label>
+                            <label htmlFor="nombre" style={{ marginTop: "0.5%" }}><strong>Nombre</strong></label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -82,11 +82,12 @@ const Cliente = props => {
                                 placeholder="nombre"
                                 value={currentCliente.nombre}
                                 onChange={handleInputChange}
+                                maxLength={30}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="apellido"><strong>Apellido</strong></label>
+                            <label htmlFor="apellido" style={{ marginTop: "0.5%" }}><strong>Apellido</strong></label>
                             <input
                                 type="text"
                                 className="form-control"
@@ -95,11 +96,12 @@ const Cliente = props => {
                                 placeholder="apellido"
                                 value={currentCliente.apellido}
                                 onChange={handleInputChange}
+                                maxLength={30}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="email"><strong>Email</strong></label>
+                            <label htmlFor="email" style={{ marginTop: "0.5%" }}><strong>Email</strong></label>
                             <input
                                 type="email"
                                 className="form-control"
@@ -108,11 +110,12 @@ const Cliente = props => {
                                 placeholder="email"
                                 value={currentCliente.email}
                                 onChange={handleInputChange}
+                                maxLength={30}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="tipo"><strong>Tipo</strong></label>
+                            <label htmlFor="tipo" style={{ marginTop: "0.5%" }}><strong>Tipo</strong></label>
                             <input
                                 type="text"
                                 className="form-control"
