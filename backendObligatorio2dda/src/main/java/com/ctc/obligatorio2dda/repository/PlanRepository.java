@@ -22,6 +22,9 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query(value = "SELECT p.* FROM planes p WHERE p.eliminado = 'No'", nativeQuery = true)
     public List<Plan> findAllPlanesNoEliminados();
 
+    @Query(value = "SELECT p.* FROM planes p WHERE p.eliminado = 'Si'", nativeQuery = true)
+    public List<Plan> findAllPlanesEliminados();
+
     @Query(value = "INSERT INTO planesclienteaux SELECT pc.cliente_id, pc.plan_id FROM planes_clientes pc WHERE pc.cliente_id = :clienteId", nativeQuery = true)
     public void auxPlanesCliente(@Param("clienteId") Long clienteId);
 

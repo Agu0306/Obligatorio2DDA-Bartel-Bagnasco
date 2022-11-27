@@ -79,7 +79,6 @@ const AgregarPlanCliente = () => {
             });
             console.log(response.data);
         })
-
         navigate("/planescliente/" + id);
         window.location.reload();
     }
@@ -108,6 +107,22 @@ const AgregarPlanCliente = () => {
                     Agregar nuevo
                 </Link>
 
+                {currentCliente.tipo == "Estandar" ? (
+                    <ul className="list-group">
+                        {planes && planes.map((plan, index) => (
+                            <li
+                                className={
+                                    "list-group-item" +
+                                    (index === currentIndex ? " active" : "")
+                                }
+                                onClick={() => setActivePlan(plan, index)}
+                                key={index}
+                                style={{ cursor: "pointer" }}>
+                                {plan.destino} <strong>U$S</strong>{plan.precio}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
                 <ul className="list-group">
                     {planes && planes.map((plan, index) => (
                         <li
@@ -118,11 +133,12 @@ const AgregarPlanCliente = () => {
                             onClick={() => setActivePlan(plan, index)}
                             key={index}
                             style={{ cursor: "pointer" }}>
-                            {plan.destino} <strong>U$S</strong>{plan.precio}
+                            {plan.destino} <strong>U$S</strong>{plan.precio * 0.80} <strong>-20%</strong>
                         </li>
                     ))}
-                </ul>
+                </ul>)}
             </div>
+            {currentCliente.tipo == "Estandar" ? (
             <div className="col-md-6">
                 {currentPlan ? (
                     <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
@@ -159,6 +175,44 @@ const AgregarPlanCliente = () => {
                     </div>
                 )}
             </div>
+            ) : (
+                <div className="col-md-6">
+                {currentPlan ? (
+                    <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
+                        <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>
+                        <div style={{ margin: "1%" }}>
+                            <label>
+                                <strong>Modalidad:</strong>
+                            </label>{" "}
+                            {currentPlan.modalidad}
+                        </div>
+                        <div style={{ margin: "1%" }}>
+                            <label>
+                                <strong>Fecha:</strong>
+                            </label>{" "}
+                            {currentPlan.fecha}
+                        </div>
+                        <div style={{ margin: "1%" }}>
+                            <label>
+                                <strong>Precio:</strong>
+                            </label>{" "}
+                            U$S{currentPlan.precio * 0.80} <strong>-20%</strong>
+                        </div>
+
+                        <button
+                            className="btn btn-success"
+                            onClick={savePlanCliente}
+                            style={{ margin: "1%" }}>
+                            Comprar
+                        </button>
+                    </div>
+                ) : (
+                    <div>
+                        <h4>Seleccione un plan</h4>
+                    </div>
+                )}
+            </div>
+            )}
         </div>
     );
 }

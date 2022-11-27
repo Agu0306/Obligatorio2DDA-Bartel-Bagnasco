@@ -59,8 +59,8 @@ public class PlanController {
         }
     }
 
-    @PutMapping("/modificarplaneliminado/{id}")
-    public ResponseEntity<Plan> updateEliminado(@PathVariable("id") Long id, @RequestBody Plan plan) {
+    @PutMapping("/modificarplaneliminadoasi/{id}")
+    public ResponseEntity<Plan> updateEliminadoASi(@PathVariable("id") Long id, @RequestBody Plan plan) {
         Optional<Plan> planData = planServiceImpl.findById(id);
         if (planData.isPresent()) {
             Plan _plan = planData.get();
@@ -69,6 +69,22 @@ public class PlanController {
             _plan.setModalidad(plan.getModalidad());
             _plan.setPrecio(plan.getPrecio());
             _plan.setEliminado("Si");
+            return new ResponseEntity<>(planServiceImpl.save(_plan), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/modificarplaneliminadoano/{id}")
+    public ResponseEntity<Plan> updateEliminadoANo(@PathVariable("id") Long id, @RequestBody Plan plan) {
+        Optional<Plan> planData = planServiceImpl.findById(id);
+        if (planData.isPresent()) {
+            Plan _plan = planData.get();
+            _plan.setDestino(plan.getDestino());
+            _plan.setFecha(plan.getFecha());
+            _plan.setModalidad(plan.getModalidad());
+            _plan.setPrecio(plan.getPrecio());
+            _plan.setEliminado("No");
             return new ResponseEntity<>(planServiceImpl.save(_plan), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -98,6 +114,14 @@ public class PlanController {
     public List<Plan> readAll() {
         List<Plan> planes = StreamSupport
                 .stream(planRepository.findAllPlanesNoEliminados().spliterator(), false)
+                .collect(Collectors.toList());
+        return planes;
+    }
+
+    @GetMapping("/planeseliminados")
+    public List<Plan> readAllPlanesEliminados() {
+        List<Plan> planes = StreamSupport
+                .stream(planRepository.findAllPlanesEliminados().spliterator(), false)
                 .collect(Collectors.toList());
         return planes;
     }

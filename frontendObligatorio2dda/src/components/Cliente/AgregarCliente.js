@@ -29,7 +29,7 @@ const AgregarCliente = () => {
             tipo: "Estandar"
         };
 
-        ClienteDataService.createClienteEstandar(data).then(response => {
+        ClienteDataService.create(data).then(response => {
             setCliente({
                 ci: response.data.ci,
                 apellido: response.data.apellido,

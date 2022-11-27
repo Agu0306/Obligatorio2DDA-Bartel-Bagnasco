@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PlanDataService from "../../services/plan.service";
 import { Link } from "react-router-dom";
 
-export default class ListaPlanes extends Component {
+export default class ListaPlanesEliminados extends Component {
     constructor(props) {
         super(props);
         this.retrievePlan = this.retrievePlanes.bind(this);
@@ -22,7 +22,7 @@ export default class ListaPlanes extends Component {
     }
 
     retrievePlanes() {
-        PlanDataService.getAll().then(response => {
+        PlanDataService.getAllPlanesEliminados().then(response => {
             this.setState({
                 planes: response.data
             });
@@ -50,7 +50,7 @@ export default class ListaPlanes extends Component {
 
     buscarPlan(e) {
         if (e.target.value === "") {
-            PlanDataService.getAll().then(response => {
+            PlanDataService.getAllPlanesEliminados().then(response => {
                 this.setState({
                     buscarPlan: "",
                     planes: response.data
@@ -79,13 +79,13 @@ export default class ListaPlanes extends Component {
     }
 
     changeEliminado = () => {
-        PlanDataService.updatePlanEliminadoASi(
+        PlanDataService.updatePlanEliminadoANo(
             this.state.currentPlan.id,
             this.state.currentPlan
         )
             .then(response => {
                 this.setState({
-                    eliminado: "Si"
+                    eliminado: "No"
                 })
                 window.location.reload();
                 console.log(response.data);
@@ -111,7 +111,7 @@ export default class ListaPlanes extends Component {
                     </div>
                 </div>
                 <div className="col-md-6">
-                    <h4>Lista de planes activos</h4>
+                    <h4>Lista de planes eliminados</h4>
                     <Link to={"/agregarplan"} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                         Agregar nuevo
                     </Link>

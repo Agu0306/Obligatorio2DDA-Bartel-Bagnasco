@@ -10,7 +10,7 @@ const ListaPlanes = () => {
     let navigate = useNavigate();
 
     const initialClienteState = {
-        id: "",
+        ci: "",
         nombre: "",
         apellido: "",
         email: "",
@@ -84,6 +84,7 @@ const ListaPlanes = () => {
                 console.log(e);
             })
         navigate("/planescliente/" + id);
+        window.location.reload();
     }
 
     const changeFecha = e => {
@@ -91,10 +92,37 @@ const ListaPlanes = () => {
     };
 
     const buscarFecha = () => {
+        planesFiltrados.sort(((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()));
         setPlanesFiltrados(planes.filter(plan => plan.fecha > fecha));
         setCurrentPlan(planesFiltrados[0]);
         setCurrentIndex(-1);
     }
+
+    const verificarClientePremium = () => {
+        if (planes.length >= 3) {
+            ClienteDataService.updateClienteToPremium(
+                currentCliente
+            )
+                .then(response => {
+                    console.log(response.data);
+                }).catch(e => {
+                    console.log(e);
+                })
+        } else if (planes.length < 3) {
+            ClienteDataService.updateClienteToEstandar(
+                currentCliente
+            )
+                .then(response => {
+                    console.log(response.data);
+                }).catch(e => {
+                    console.log(e);
+                })
+        }
+    }
+
+    window.onbeforeunload = function(){
+        verificarClientePremium(currentCliente);
+    };
 
     return (
         <div className="list row">
@@ -114,7 +142,9 @@ const ListaPlanes = () => {
                 <Link to={"/agregarplanescliente/" + id} className="btn btn-success" style={{ marginTop: "1%", marginBottom: "1%" }}>
                     Agregar nuevo
                 </Link>
+
                 <h5>Primer viaje después de:</h5>
+
                 <div className="input-group mb-3">
                     <input
                         type="date"
@@ -133,57 +163,111 @@ const ListaPlanes = () => {
                     </div>
                 </div>
 
-                <ul className="list-group">
-                    {planes && planes.map((plan, index) => (
-                        <li
-                            className={
-                                "list-group-item" +
-                                (index === currentIndex ? " active" : "")
-                            }
-                            onClick={() => setActivePlan(plan, index)}
-                            key={index}
-                            style={{ cursor: "pointer" }}>
-                            {plan.destino} <strong>U$S</strong>{plan.precio}
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            <div className="col-md-6">
-                {currentPlan ? (
-                    <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
-                        <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>
-                        <div style={{ margin: "1%" }}>
-                            <label>
-                                <strong>Modalidad:</strong>
-                            </label>{" "}
-                            {currentPlan.modalidad}
-                        </div>
-                        <div style={{ margin: "1%" }}>
-                            <label>
-                                <strong>Fecha:</strong>
-                            </label>{" "}
-                            {currentPlan.fecha}
-                        </div>
-                        <div style={{ margin: "1%" }}>
-                            <label>
-                                <strong>Precio:</strong>
-                            </label>{" "}
-                            U$S{currentPlan.precio}
-                        </div>
-
-                        <button
-                            className="btn btn-danger"
-                            onClick={deletePlanCliente}
-                            style={{ margin: "1%" }}>
-                            Borrar
-                        </button>
-                    </div>
+                {currentCliente.tipo == "Estandar" ? (
+                    <ul className="list-group">
+                        {planes && planes.map((plan, index) => (
+                            <li
+                                className={
+                                    "list-group-item" +
+                                    (index === currentIndex ? " active" : "")
+                                }
+                                onClick={() => setActivePlan(plan, index)}
+                                key={index}
+                                style={{ cursor: "pointer" }}>
+                                {plan.destino} <strong>U$S</strong>{plan.precio}
+                            </li>
+                        ))}
+                    </ul>
                 ) : (
-                    <div>
-                        <h4>Seleccione un plan</h4>
-                    </div>
-                )}
+                    <ul className="list-group">
+                        {planes && planes.map((plan, index) => (
+                            <li
+                                className={
+                                    "list-group-item" +
+                                    (index === currentIndex ? " active" : "")
+                                }
+                                onClick={() => setActivePlan(plan, index)}
+                                key={index}
+                                style={{ cursor: "pointer" }}>
+                                {plan.destino} <strong>U$S</strong>{plan.precio * 0.80} <strong>-20%</strong>
+                            </li>
+                        ))}
+                    </ul>)}
             </div>
+            {currentCliente.tipo == "Estandar" ? (
+                <div className="col-md-6">
+                    {currentPlan ? (
+                        <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
+                            <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>
+                            <div style={{ margin: "1%" }}>
+                                <label>
+                                    <strong>Modalidad:</strong>
+                                </label>{" "}
+                                {currentPlan.modalidad}
+                            </div>
+                            <div style={{ margin: "1%" }}>
+                                <label>
+                                    <strong>Fecha:</strong>
+                                </label>{" "}
+                                {currentPlan.fecha}
+                            </div>
+                            <div style={{ margin: "1%" }}>
+                                <label>
+                                    <strong>Precio:</strong>
+                                </label>{" "}
+                                U$S{currentPlan.precio}
+                            </div>
+
+                            <button
+                                className="btn btn-danger"
+                                onClick={deletePlanCliente}
+                                style={{ margin: "1%" }}>
+                                Borrar
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <h4>Seleccione un plan</h4>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="col-md-6">
+                    {currentPlan ? (
+                        <div style={{ border: '1px solid #C7C8C9', padding: '5px', borderRadius: '1%' }}>
+                            <h4 style={{ margin: "1%" }}>{currentPlan.destino}</h4>
+                            <div style={{ margin: "1%" }}>
+                                <label>
+                                    <strong>Modalidad:</strong>
+                                </label>{" "}
+                                {currentPlan.modalidad}
+                            </div>
+                            <div style={{ margin: "1%" }}>
+                                <label>
+                                    <strong>Fecha:</strong>
+                                </label>{" "}
+                                {currentPlan.fecha}
+                            </div>
+                            <div style={{ margin: "1%" }}>
+                                <label>
+                                    <strong>Precio:</strong>
+                                </label>{" "}U$S{currentPlan.precio * 0.80} <strong>-20%</strong>
+                            </div>
+
+                            <button
+                                className="btn btn-danger"
+                                onClick={deletePlanCliente}
+                                style={{ margin: "1%" }}>
+                                Borrar
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <h4>Seleccione un plan</h4>
+                        </div>
+                    )}
+                </div>
+                )}
         </div>
     );
 }

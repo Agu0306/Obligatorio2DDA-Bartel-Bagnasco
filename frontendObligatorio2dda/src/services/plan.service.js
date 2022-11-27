@@ -5,6 +5,10 @@ class PlanDataService {
     return http.get("/planes");
   }
 
+  getAllPlanesEliminados(){
+    return http.get("/planeseliminados");
+  }
+
   get(id) {
     return http.get(`/planes/${id}`);
   }
@@ -21,8 +25,12 @@ class PlanDataService {
     return http.delete(`/borrarplan/${id}`);
   }
 
-  updatePlanEliminado(id, data){
-    return http.put(`/modificarplaneliminado/${id}`, data);
+  updatePlanEliminadoASi(id, data){
+    return http.put(`/modificarplaneliminadoasi/${id}`, data);
+  }
+
+  updatePlanEliminadoANo(id, data){
+    return http.put(`/modificarplaneliminadoano/${id}`, data);
   }
 }
 

@@ -7,7 +7,7 @@ const Cliente = props => {
     let navigate = useNavigate();
 
     const initialClienteState = {
-        ci: null,
+        ci: "",
         nombre: "",
         apellido: "",
         email: "",
@@ -39,7 +39,7 @@ const Cliente = props => {
     };
 
     const updateCliente = () => {
-        ClienteDataService.updateClienteEstandar(
+        ClienteDataService.update(
             currentCliente.ci,
             currentCliente
         )

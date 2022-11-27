@@ -72,23 +72,13 @@ export default class ListaClientes extends Component {
     }
 
     deleteCliente = () => {
-        if (this.state.currentCliente.tipo === "Estandar") {
-            ClienteDataService.deleteClienteEstandar(this.state.currentCliente.ci)
-                .then(response => {
-                    console.log(response.data);
-                    window.location.reload();
-                }).catch(e => {
-                    console.log(e);
-                })
-        } else if (this.state.currentCliente.tipo === "Premium") {
-            ClienteDataService.deleteClientePremium(this.state.currentCliente.ci)
-                .then(response => {
-                    console.log(response.data);
-                    window.location.reload();
-                }).catch(e => {
-                    console.log(e);
-                })
-        }
+        ClienteDataService.delete(this.state.currentCliente.ci)
+            .then(response => {
+                console.log(response.data);
+                window.location.reload();
+            }).catch(e => {
+                console.log(e);
+            })
     }
 
     render() {
@@ -186,7 +176,7 @@ export default class ListaClientes extends Component {
                         </div>
                     ) : (
                         <div>
-                            <h4 style={{margin: "0"}}>Seleccione un cliente</h4>
+                            <h4 style={{ margin: "0" }}>Seleccione un cliente</h4>
                         </div>
                     )}
                 </div>
