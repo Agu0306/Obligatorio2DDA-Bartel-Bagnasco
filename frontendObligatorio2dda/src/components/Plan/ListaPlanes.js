@@ -148,6 +148,10 @@ export default class ListaPlanes extends Component {
                         Planes eliminados
                     </Link>
 
+                    <div>
+                        {this.state.planes.length == 0 ? <p style={{ fontSize: "1.5rem" }}>No hay planes</p> : <p></p>}
+                    </div>
+
                     <ul className="list-group">
                         {planes && planes.map((plan, index) => (
                             <li
@@ -162,7 +166,7 @@ export default class ListaPlanes extends Component {
                             </li>
                         ))}
 
-                        <p style={{ color: "red", marginTop: "2%", fontSize:"1.2rem" }}>{this.state.message}</p>
+                        <p style={{ color: "red", marginTop: "2%", fontSize: "1.2rem" }}>{this.state.message}</p>
                     </ul>
                 </div>
                 <div className="col-md-6">

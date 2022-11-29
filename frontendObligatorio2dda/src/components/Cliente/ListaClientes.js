@@ -121,6 +121,10 @@ export default class ListaClientes extends Component {
                         Agregar nuevo
                     </Link>
 
+                    <div>
+                        {this.state.clientes.length == 0 ? <p style={{ fontSize: "1.5rem" }}>No hay clientes</p> : <p></p>}
+                    </div>
+
                     <ul className="list-group">
                         {clientes && clientes.map((cliente, index) => (
                             <li

@@ -120,7 +120,7 @@ const ListaPlanes = () => {
         }
     }
 
-    window.onbeforeunload = function(){
+    window.onbeforeunload = function () {
         verificarClientePremium(currentCliente);
     };
 
@@ -147,8 +147,8 @@ const ListaPlanes = () => {
                     Agregar nuevo
                 </Link>
 
-                
-                <button className="btn btn-secondary" style={{marginLeft: "2%"}} onClick={reloadPage}>
+
+                <button className="btn btn-secondary" style={{ marginLeft: "2%" }} onClick={reloadPage}>
                     Actualizar cliente
                 </button>
 
@@ -170,6 +170,10 @@ const ListaPlanes = () => {
                             Buscar
                         </button>
                     </div>
+                </div>
+
+                <div>
+                    {planes.length == 0 ? <p style={{ fontSize: "1.5rem" }}>No hay planes</p> : <p></p>}
                 </div>
 
                 {currentCliente.tipo == "Estandar" ? (

@@ -142,6 +142,10 @@ export default class ListaPlanesEliminados extends Component {
                     <h4>Lista de planes eliminados</h4>
                     <p>Estos planes no están disponibles para asignarles nuevos clientes</p>
 
+                    <div>
+                        {this.state.planes.length == 0 ? <p style={{ fontSize: "1.5rem" }}>No hay planes</p> : <p></p>}
+                    </div>
+
                     <ul className="list-group">
                         {planes && planes.map((plan, index) => (
                             <li
