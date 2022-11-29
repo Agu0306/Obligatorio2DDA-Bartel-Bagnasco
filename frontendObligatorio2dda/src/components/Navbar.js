@@ -15,7 +15,7 @@ class App extends Component {
     return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <a href="/planes" className="navbar-brand" style={{marginLeft: "1%"}}>
+          <a href="/" className="navbar-brand" style={{marginLeft: "1%"}}>
             Obligatorio
           </a>
           <div className="navbar-nav mr-auto">

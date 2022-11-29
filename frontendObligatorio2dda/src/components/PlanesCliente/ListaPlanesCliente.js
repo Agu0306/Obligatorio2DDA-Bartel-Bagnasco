@@ -59,7 +59,7 @@ const ListaPlanes = () => {
     const buscarPlan = (e) => {
         if (e.target.value === "") {
             try {
-                PlanDataService.get(id).then(response => {
+                PlanesClienteDataService.get(id).then(response => {
                     setPlanes(response.data)
                 });
             } catch (e) {
